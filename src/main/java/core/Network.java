@@ -1,4 +1,4 @@
-package main;
+package core;
 
 public class Network {
 
@@ -31,13 +31,13 @@ public class Network {
         inputNodes = new double[inputN];
         hiddenNodes = new double[hiddenL][hiddenN];
         outputNodes = new double[outputN];
-        weights = new double[hiddenL + 1];
+        weights = new double[hiddenL + 1][][];
 
         for (int i = 0; i < hiddenL + 1; i++) {
             if (i == 0) {
-                weights[i] = new double[inputN];
+                weights[i] = new double[inputN][];
             } else {
-                weights[i] = new double[hiddenN];
+                weights[i] = new double[hiddenN][];
             }
 
             for (int j = 0; j < weights[i].length; i++) {
