@@ -12,7 +12,7 @@ public class Core {
 
     public Core(String[] args) {
 
-        T = new Trainer(500, 3, 50, 5, 6);
+        T = new Trainer(1000, 3, 50, 50, 6);
 
         /*
         n = new Network(3, 5, 5, 1);
