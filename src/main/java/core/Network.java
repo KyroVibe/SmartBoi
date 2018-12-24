@@ -1,13 +1,13 @@
 package core;
 
+import java.util.Random;
+
 public class Network {
 
     // double[Node]
     // double[Layer][Node]
     // double[Layer][Node][Weight]
-    private double[] inputNodes;
-    private double[][] hiddenNodes;
-    private double[] outputNodes;
+    private double[][] nodes;
     private double[][][] weights;
 
     // -[Contructors]-
@@ -28,12 +28,22 @@ public class Network {
     // -[Operators]-
 
     private void init(int inputN, int hiddenN, int hiddenL, int outputN) {
-        inputNodes = new double[inputN];
-        hiddenNodes = new double[hiddenL][hiddenN];
-        outputNodes = new double[outputN];
-        weights = new double[hiddenL + 1][][];
+        nodes = new double[2 + hiddenL][];
+        for (int i = 0; i < nodes.length; i++) {
+            if (i == 0) {
+                nodes[0] = new double[inputN];
+            } else if (i == nodes.length - 1) {
+                nodes[i] = new double[outputN];
+            } else {
+                nodes[i] = new double[hiddenN];
+            }
+        }
 
-        for (int i = 0; i < hiddenL + 1; i++) {
+        weights = GenWeights();
+
+        //weights = new double[hiddenL + 1][][];
+
+        /*for (int i = 0; i < hiddenL + 1; i++) {
             if (i == 0) {
                 weights[i] = new double[inputN][];
             } else {
@@ -51,13 +61,58 @@ public class Network {
                     weights[i][j][w] = 0.5;
                 }
             }
+        }*/
+    }
+
+    public double[][][] GenWeights() {
+
+        Random rand = new Random();
+
+        double[][][] wt;
+
+        wt = new double[nodes.length - 1][][];
+
+        for (int x = 0; x < (nodes.length) - 1; x++) {
+            wt[x] = new double[nodes[x].length][];
+            for (int y = 0; y < nodes[x].length; y++) {
+                if ((x < (nodes.length - 1) - 2) && (x >= 0))
+                    wt[x][y] = new double[nodes[x + 1].length - 1];
+                else
+                    wt[x][y] = new double[nodes[x + 1].length];
+                for (int z = 0; z < wt[x][y].length; z++) {
+                    //wt[x][y][z] = ((double)rand.nextDouble() - 0.5);
+                    wt[x][y][z] = 0.5;
+                    //System.out.println(wt[x][y][z]);
+                }
+            }
         }
+
+        return wt;
     }
 
     public double[] process(double[] input) {
-        inputNodes = input;
+        nodes[0] = input;
 
-        for (int i = 0; i < weights.length - 1; i++) {
+        for (int y = 0; y < nodes[0].length; y++) {
+            System.out.println(nodes[0][y]);
+        }
+
+        for (int i = 0; i < (nodes.length) - 1; i++) {
+            for (int a = 0; a < nodes[i].length; a++) {
+                for (int g = 0; g < nodes[i + 1].length; g++) {
+
+                    for (int b = 0; b < weights[i][a].length; b++) {
+                        //System.out.println(weights[i][a][b]);
+                        nodes[i + 1][g] += nodes[i][a] * weights[i][a][b];
+                    }
+                    //System.out.println(g);
+                    nodes[i + 1][g] = nodes[i + 1][g] / weights[i][a].length;
+                    //System.out.println(g);
+                }
+            }
+        }
+
+        /*for (int i = 0; i < weights.length - 1; i++) {
             for (int j = 0; j < weights[i + 1].length; j++) {
                 for (int w = 0; w < weights[i - 1][j].length; w++) {
                     if (i == 0) {
@@ -94,9 +149,15 @@ public class Network {
                     }
                 }
             }
+        }*/
+
+        for (int h = 0; h < nodes.length; h++) {
+            for (int y = 0; y < nodes[h].length; y++) {
+                //System.out.println(nodes[h][y]);
+            }
         }
 
-        return outputNodes;
+        return nodes[nodes.length - 1];
     }
 
 }
