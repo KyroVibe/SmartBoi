@@ -10,9 +10,28 @@ public class Network {
     private double[][] nodes;
     private double[][][] weights;
 
+    public boolean Purge = false;
+    public double Error;
+
     // -[Contructors]-
 
     public Network() { }
+
+    // OffSpring Network
+    public Network(int inputN, int hiddenN, int hiddenL, int outputN, double[][][] newWeights) {
+        nodes = new double[2 + hiddenL][];
+        for (int i = 0; i < nodes.length; i++) {
+            if (i == 0) {
+                nodes[0] = new double[inputN];
+            } else if (i == nodes.length - 1) {
+                nodes[i] = new double[outputN];
+            } else {
+                nodes[i] = new double[hiddenN];
+            }
+        }
+
+        weights = newWeights;
+    }
 
     // New Network
     public Network(String path) {
@@ -81,7 +100,7 @@ public class Network {
                     wt[x][y] = new double[nodes[x + 1].length];
                 for (int z = 0; z < wt[x][y].length; z++) {
                     //wt[x][y][z] = ((double)rand.nextDouble() - 0.5);
-                    wt[x][y][z] = 0.5;
+                    wt[x][y][z] = (rand.nextDouble() * 2);
                     //System.out.println(wt[x][y][z]);
                 }
             }
@@ -93,9 +112,9 @@ public class Network {
     public double[] process(double[] input) {
         nodes[0] = input;
 
-        for (int y = 0; y < nodes[0].length; y++) {
-            System.out.println(nodes[0][y]);
-        }
+        //for (int y = 0; y < nodes[0].length; y++) {
+            //System.out.println(nodes[0][y]);
+        //}
 
         for (int i = 0; i < (nodes.length) - 1; i++) {
             for (int a = 0; a < nodes[i].length; a++) {
@@ -159,5 +178,7 @@ public class Network {
 
         return nodes[nodes.length - 1];
     }
+
+    public double[][][] getWeights() { return weights; }
 
 }

@@ -17,13 +17,10 @@ plugins {
 // Define the main class for the application
 mainClassName = 'core.Core'
 
-task fatJar(type: Jar) {
-	manifest {
+jar {
+    manifest {
         attributes 'Main-Class': 'core.Core'
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
 dependencies {
@@ -41,6 +38,4 @@ repositories {
     //jcenter()
 }
 
-jar {
-        manifest.attributes provider: 'gradle'
-    }
+
